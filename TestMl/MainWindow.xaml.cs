@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using TestMlML.ConsoleApp;
 using TestMlML.Model;
 namespace TestMl
 {
@@ -55,12 +56,13 @@ namespace TestMl
             };
 
             var input = new ModelInput();
-            input.X_pos = Convert.ToInt32(p.Y);
-            input.Y_pos = Convert.ToInt32(p.X);
-            // Load model and predict output of sample data
+            input.X_pos = Convert.ToInt32(p.X);
+            input.Y_pos = Convert.ToInt32(p.Y);
             ModelOutput result = ConsumeModel.Predict(input);
-            // Use Canvas's static methods to position the text
             text.Text = result.Prediction + " " + result.Score.Max();
+
+            //text.Text = mylabel.Text;
+
             Canvas.SetTop(text, p.Y);
             Canvas.SetLeft(text, p.X - 5);
 
@@ -78,7 +80,8 @@ namespace TestMl
 
 
 
-            var pqq = new PointData() { Label = text.Text  + result.Score.ToString(), x_pos = Convert.ToInt32(p.Y), y_pos = Convert.ToInt32(p.X) };
+            var pqq = new ModelInput() { Label = text.Text  , Y_pos = Convert.ToInt32(p.Y), X_pos = Convert.ToInt32(p.X) };
+            //var pqq = new ModelInput() { Label = text.Text  + result.Score.ToString(), Y_pos = Convert.ToInt32(p.Y), X_pos = Convert.ToInt32(p.X) };
             Punkty.Add(pqq);
 
             //using (var context = new BloggingContext())
@@ -90,13 +93,11 @@ namespace TestMl
 
 
 
-        public List<PointData> Punkty { get; set; } = new List<PointData>();
+        public List<ModelInput> Punkty { get; set; } = new List<ModelInput>();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //var mlContext = new MLContext(seed: 0);
-
-            //BuildTrainEvaluateAndSaveModel(mlContext);
+            ModelBuilder.CreateModel(Punkty);
         }
     }
 

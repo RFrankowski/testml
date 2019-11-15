@@ -18,7 +18,7 @@ namespace TestMlML.ConsoleApp
             // Create single instance of sample data from first line of dataset for model input
             //ModelInput sampleData = CreateSingleDataSample(DATA_FILEPATH);
 
-            ModelBuilder.CreateModel();
+            //ModelBuilder.CreateModel();
 
                         // Make a single prediction on the sample data and print results
             //            ModelOutput predictionResult = ConsumeModel.Predict(sampleData);

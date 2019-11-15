@@ -25,30 +25,24 @@ namespace TestMlML.ConsoleApp
             int index = rng.Next(text.Length);
             return text[index];
         }
-        public static void CreateModel()
+        public static void CreateModel(List<ModelInput>  modelInputs)
         {
-            // Load Data
-            List<ModelInput> modelInputs = new List<ModelInput>() { 
-            new ModelInput(){Id = 1,Label ="a", X_pos = 22, Y_pos = 33 },
-            new ModelInput(){Id = 1,Label ="g", X_pos = 22, Y_pos = 33 },
-            new ModelInput(){Id = 1,Label ="g", X_pos = 22, Y_pos = 33 },
-            new ModelInput(){Id = 1,Label ="a", X_pos = 222, Y_pos = 33 },
-        
-            };
+            
+            var number = modelInputs.Select(x => x.Label).Distinct().Count();
 
             var random = new Random();
-            for (int i = 0; i < 500; i++)
-            {
-                var k = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 1);
-                modelInputs.Add(new ModelInput() { Id = 1, Label = k, X_pos = random.Next(1 , 300), Y_pos = random.Next(1, 300) });
-            }
+            //for (int i = 0; i < 500; i++)
+            //{
+            //    var k = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 1);
+            //    modelInputs.Add(new ModelInput() { Id = 1, Label = k, X_pos = random.Next(1 , 300), Y_pos = random.Next(1, 300) });
+            //}
             IDataView trainingDataView = mlContext.Data.LoadFromEnumerable(modelInputs);
 
             // Build training pipeline
             IEstimator<ITransformer> trainingPipeline = BuildTrainingPipeline(mlContext);
 
             // Evaluate quality of Model
-            Evaluate(mlContext, trainingDataView, trainingPipeline);
+            Evaluate(mlContext, trainingDataView, trainingPipeline, number);
 
             // Train Model
             ITransformer mlModel = TrainModel(mlContext, trainingDataView, trainingPipeline);
@@ -81,12 +75,12 @@ namespace TestMlML.ConsoleApp
             return model;
         }
 
-        private static void Evaluate(MLContext mlContext, IDataView trainingDataView, IEstimator<ITransformer> trainingPipeline)
+        private static void Evaluate(MLContext mlContext, IDataView trainingDataView, IEstimator<ITransformer> trainingPipeline, int numberofclass)
         {
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
             Console.WriteLine("=============== Cross-validating to get model's accuracy metrics ===============");
-            var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(trainingDataView, trainingPipeline, numberOfFolds: 50, labelColumnName: "Label");
+            var crossValidationResults = mlContext.MulticlassClassification.CrossValidate(trainingDataView, trainingPipeline, numberOfFolds: numberofclass, labelColumnName: "Label");
             PrintMulticlassClassificationFoldsAverageMetrics(crossValidationResults);
         }
 
