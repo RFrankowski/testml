@@ -12,25 +12,17 @@ namespace TestMlML.ConsoleApp
 {
     public static class ModelBuilder
     {
-        private static string TRAIN_DATA_FILEPATH = @"C:\Users\rfran\AppData\Local\Temp\0652595d-d44b-4ec0-b4e2-ad8e3a892fd9.tsv";
-        private static string MODEL_FILEPATH = @"../../../../TestMlML.Model/MLModel.zip";
-
+        //private static string MODEL_FILEPATH = @"../../../../TestMlML.Model/MLModel.zip";
+        private static string MODEL_FILEPATH = (Environment.GetCommandLineArgs()[0]).Replace(@"\TestMl.dll","") + @"\MLModel.zip";
         // Create MLContext to be shared across the model creation workflow objects 
         // Set a random seed for repeatable/deterministic results across multiple trainings.
         private static MLContext mlContext = new MLContext(seed: 1);
 
-
-        public static char GetRandomCharacter(string text, Random rng)
-        {
-            int index = rng.Next(text.Length);
-            return text[index];
-        }
         public static void CreateModel(List<ModelInput>  modelInputs)
         {
             
             var number = modelInputs.Select(x => x.Label).Distinct().Count();
 
-            var random = new Random();
             //for (int i = 0; i < 500; i++)
             //{
             //    var k = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 1);

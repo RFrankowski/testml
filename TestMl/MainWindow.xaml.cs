@@ -23,72 +23,42 @@ namespace TestMl
 
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //e.MouseDevice.GetPosition(App.Current.MainWindow);
+            Point p = e.MouseDevice.GetPosition(myCanvas);
+            //Point p = Mouse.GetPosition(App.Current.MainWindow);
+            var x = Convert.ToInt32(p.X);
+            var y = Convert.ToInt32(p.Y);
+            if (myToggle.IsChecked.HasValue && myToggle.IsChecked.Value)
+            {
+                var input = new ModelInput();
+                input.X_pos = x;
+                input.Y_pos = y;
+                ModelOutput result = ConsumeModel.Predict(input);
+                dodajelipse(x, y, result.Prediction + " " + result.Score.Max());
+            }
+            else
+            {
+                var label = mylabel.Text;
+                dodajelipse(x, y, label);
+                var punkt = new ModelInput() { Label = label, Y_pos = y, X_pos = x };
+                Punkty.Add(punkt);
+            }
+        }
 
-            //Point p = e.MouseDevice.GetPosition(App.Current.MainWindow);
-
-
-            //Ellipse el = new Ellipse();
-            //el.Height = 10;
-            //el.Width = 10;
-            //el.StrokeThickness = 2;
-            //el.Fill = Brushes.Black;
-            //Canvas.SetTop(el, p.X);
-            //Canvas.SetLeft(el, p.Y);
-
-            //myCanvas.Children.Add(el);
-
-            Point p = Mouse.GetPosition(App.Current.MainWindow);
-
-            // Initialize a new Rectangle
-            Ellipse r = new Ellipse();
-
-            // Set up rectangle's size
+        private void dodajelipse(int x, int y, string label)
+        {
+            var textblok = new TextBlock() { Text = label };
+            var r = new Ellipse();
             r.Width = 10;
             r.Height = 10;
-
-            // Set up the Background color
             r.Fill = Brushes.Black;
-
-            var text = new TextBlock()
-            {
-                Text = mylabel.Text
-            };
-
-            var input = new ModelInput();
-            input.X_pos = Convert.ToInt32(p.X);
-            input.Y_pos = Convert.ToInt32(p.Y);
-            ModelOutput result = ConsumeModel.Predict(input);
-            text.Text = result.Prediction + " " + result.Score.Max();
-
-            //text.Text = mylabel.Text;
-
-            Canvas.SetTop(text, p.Y);
-            Canvas.SetLeft(text, p.X - 5);
-
             // Set up the position in the window, at mouse coordonate
-            Canvas.SetTop(r, p.Y);
-            Canvas.SetLeft(r, p.X);
-
+            Canvas.SetTop(r, y);
+            Canvas.SetLeft(r, x);
             // Add rectangle to the Canvas
             myCanvas.Children.Add(r);
-            myCanvas.Children.Add(text);
-            //DrawRectWithText();
-
-            // Add input data
-            
-
-
-
-            var pqq = new ModelInput() { Label = text.Text  , Y_pos = Convert.ToInt32(p.Y), X_pos = Convert.ToInt32(p.X) };
-            //var pqq = new ModelInput() { Label = text.Text  + result.Score.ToString(), Y_pos = Convert.ToInt32(p.Y), X_pos = Convert.ToInt32(p.X) };
-            Punkty.Add(pqq);
-
-            //using (var context = new BloggingContext())
-            //{
-            //    context.Add(pqq);
-            //    context.SaveChanges();
-            //}
+            myCanvas.Children.Add(textblok);
+            Canvas.SetTop(textblok, y);
+            Canvas.SetLeft(textblok, x - 5);
         }
 
 
@@ -98,6 +68,17 @@ namespace TestMl
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ModelBuilder.CreateModel(Punkty);
+        }
+
+        private void ToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.Punkty.Clear();
+            myCanvas.Children.Clear();
         }
     }
 
