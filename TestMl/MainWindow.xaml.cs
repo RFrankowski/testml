@@ -1,5 +1,4 @@
-﻿using Microsoft.ML;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -23,7 +22,8 @@ namespace TestMl
 
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Point p = e.MouseDevice.GetPosition(myCanvas);
+            tb_canvashint.Visibility = Visibility.Collapsed;
+            var p = e.MouseDevice.GetPosition(myCanvas);
             var x = Convert.ToInt32(p.X);
             var y = Convert.ToInt32(p.Y);
             if (myToggle.IsChecked ?? false)
@@ -31,32 +31,32 @@ namespace TestMl
                 var input = new ModelInput();
                 input.X_pos = x;
                 input.Y_pos = y;
-                ModelOutput result = ConsumeModel.Predict(input);
-                dodajelipse(x, y, result.Prediction + " " + result.Score.Max());
+                var result = ConsumeModel.Predict(input);
+                addElipseWithLabel(x, y, result.Prediction + " " + Math.Round(result.Score.Max(),2));
             }
             else
             {
                 var label = mylabel.Text;
-                dodajelipse(x, y, label);
+                addElipseWithLabel(x, y, label);
                 var punkt = new ModelInput() { Label = label, Y_pos = y, X_pos = x };
                 Punkty.Add(punkt);
             }
         }
 
-        private void dodajelipse(int x, int y, string label)
+        private void addElipseWithLabel(int x, int y, string label)
         {
-            var eli = new Ellipse();
-            eli.Width = 10;
-            eli.Height = 10;
-            eli.Fill = Brushes.Black;
-            Canvas.SetTop(eli, y);
-            Canvas.SetLeft(eli, x);
-            myCanvas.Children.Add(eli);
-            
-            var textblok = new TextBlock() { Text = label };
-            myCanvas.Children.Add(textblok);
-            Canvas.SetTop(textblok, y);
-            Canvas.SetLeft(textblok, x - 5);
+            var ellipse = new Ellipse();
+            ellipse.Width = 10;
+            ellipse.Height = 10;
+            ellipse.Fill = Brushes.Black;
+            Canvas.SetTop(ellipse, y);
+            Canvas.SetLeft(ellipse, x);
+            myCanvas.Children.Add(ellipse);
+
+            var pointlabel = new Label() { Content = label };
+            myCanvas.Children.Add(pointlabel);
+            Canvas.SetTop(pointlabel, y);
+            Canvas.SetLeft(pointlabel, x + 10);
         }
 
 
@@ -73,6 +73,7 @@ namespace TestMl
         {
             this.Punkty.Clear();
             myCanvas.Children.Clear();
+            tb_canvashint.Visibility = Visibility.Visible;
         }
     }
 
