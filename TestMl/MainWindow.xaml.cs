@@ -24,10 +24,9 @@ namespace TestMl
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point p = e.MouseDevice.GetPosition(myCanvas);
-            //Point p = Mouse.GetPosition(App.Current.MainWindow);
             var x = Convert.ToInt32(p.X);
             var y = Convert.ToInt32(p.Y);
-            if (myToggle.IsChecked.HasValue && myToggle.IsChecked.Value)
+            if (myToggle.IsChecked ?? false)
             {
                 var input = new ModelInput();
                 input.X_pos = x;
@@ -46,16 +45,15 @@ namespace TestMl
 
         private void dodajelipse(int x, int y, string label)
         {
+            var eli = new Ellipse();
+            eli.Width = 10;
+            eli.Height = 10;
+            eli.Fill = Brushes.Black;
+            Canvas.SetTop(eli, y);
+            Canvas.SetLeft(eli, x);
+            myCanvas.Children.Add(eli);
+            
             var textblok = new TextBlock() { Text = label };
-            var r = new Ellipse();
-            r.Width = 10;
-            r.Height = 10;
-            r.Fill = Brushes.Black;
-            // Set up the position in the window, at mouse coordonate
-            Canvas.SetTop(r, y);
-            Canvas.SetLeft(r, x);
-            // Add rectangle to the Canvas
-            myCanvas.Children.Add(r);
             myCanvas.Children.Add(textblok);
             Canvas.SetTop(textblok, y);
             Canvas.SetLeft(textblok, x - 5);
@@ -70,10 +68,6 @@ namespace TestMl
             ModelBuilder.CreateModel(Punkty);
         }
 
-        private void ToggleButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {

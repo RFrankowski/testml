@@ -18,10 +18,7 @@
 
             <TextBox x:Name="mylabel" Text="a" />
             <Button Click="Button_Click" Content="train and build" />
-            <ToggleButton
-                x:Name="myToggle"
-                Click="ToggleButton_Click"
-                Content="test model" />
+            <ToggleButton x:Name="myToggle" Content="test model" />
             <Button Click="Button_Click_1" Content="Czyść" />
         </StackPanel>
         <Canvas
