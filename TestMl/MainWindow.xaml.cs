@@ -59,15 +59,12 @@ namespace TestMl
             Canvas.SetLeft(pointlabel, x + 10);
         }
 
-
-
         public List<ModelInput> Punkty { get; set; } = new();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ModelBuilder.CreateModel(Punkty);
         }
-
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
@@ -76,12 +73,4 @@ namespace TestMl
             tb_canvashint.Visibility = Visibility.Visible;
         }
     }
-
-
-
-
-
-
-
-
 }

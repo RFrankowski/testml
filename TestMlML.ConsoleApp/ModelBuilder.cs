@@ -16,27 +16,27 @@ namespace TestMlML.ConsoleApp
         private static string MODEL_FILEPATH = AppDomain.CurrentDomain.BaseDirectory + @"MLModel.zip";
         // Create MLContext to be shared across the model creation workflow objects 
         // Set a random seed for repeatable/deterministic results across multiple trainings.
-        private static MLContext mlContext = new MLContext(seed: 1);
+        private static MLContext _mlContext = new(seed: 1);
 
-        public static void CreateModel(IEnumerable<ModelInput>  modelInputs)
+        public static void CreateModel(IEnumerable<ModelInput> modelInputs)
         {
-            
+
             var number = modelInputs.Select(x => x.Label).Distinct().Count();
 
             //    var k = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 1);
-            IDataView trainingDataView = mlContext.Data.LoadFromEnumerable(modelInputs);
+            IDataView trainingDataView = _mlContext.Data.LoadFromEnumerable(modelInputs);
 
             // Build training pipeline
-            IEstimator<ITransformer> trainingPipeline = BuildTrainingPipeline(mlContext);
+            IEstimator<ITransformer> trainingPipeline = BuildTrainingPipeline(_mlContext);
 
             // Evaluate quality of Model
-            Evaluate(mlContext, trainingDataView, trainingPipeline, number);
+            Evaluate(_mlContext, trainingDataView, trainingPipeline, number);
 
             // Train Model
-            ITransformer mlModel = TrainModel(mlContext, trainingDataView, trainingPipeline);
+            ITransformer mlModel = TrainModel(_mlContext, trainingDataView, trainingPipeline);
 
             // Save model
-            SaveModel(mlContext, mlModel, MODEL_FILEPATH, trainingDataView.Schema);
+            SaveModel(_mlContext, mlModel, MODEL_FILEPATH, trainingDataView.Schema);
         }
 
         public static IEstimator<ITransformer> BuildTrainingPipeline(MLContext mlContext)
