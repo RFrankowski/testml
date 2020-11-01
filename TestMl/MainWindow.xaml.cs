@@ -28,27 +28,27 @@ namespace TestMl
             var y = Convert.ToInt32(p.Y);
             if (myToggle.IsChecked ?? false)
             {
-                var input = new ModelInput();
-                input.X_pos = x;
-                input.Y_pos = y;
+                ModelInput input = new() { X_pos = x, Y_pos = y };
                 var result = ConsumeModel.Predict(input);
-                addElipseWithLabel(x, y, result.Prediction + " " + Math.Round(result.Score.Max(),2));
+                addElipseWithLabel(x, y, result.Prediction + " " + Math.Round(result.Score.Max(), 2));
             }
             else
             {
                 var label = mylabel.Text;
                 addElipseWithLabel(x, y, label);
-                var punkt = new ModelInput() { Label = label, Y_pos = y, X_pos = x };
+                ModelInput punkt = new() { Label = label, Y_pos = y, X_pos = x };
                 Punkty.Add(punkt);
             }
         }
 
         private void addElipseWithLabel(int x, int y, string label)
         {
-            var ellipse = new Ellipse();
-            ellipse.Width = 10;
-            ellipse.Height = 10;
-            ellipse.Fill = Brushes.Black;
+            Ellipse ellipse = new()
+            {
+                Width = 10,
+                Height = 10,
+                Fill = Brushes.Black
+            };
             Canvas.SetTop(ellipse, y);
             Canvas.SetLeft(ellipse, x);
             myCanvas.Children.Add(ellipse);
@@ -61,7 +61,7 @@ namespace TestMl
 
 
 
-        public List<ModelInput> Punkty { get; set; } = new List<ModelInput>();
+        public List<ModelInput> Punkty { get; set; } = new();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -71,7 +71,7 @@ namespace TestMl
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            this.Punkty.Clear();
+            Punkty.Clear();
             myCanvas.Children.Clear();
             tb_canvashint.Visibility = Visibility.Visible;
         }
